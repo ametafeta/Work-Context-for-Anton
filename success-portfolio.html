@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Candidates — Interview File</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #efe7d3;
+    --paper-dark: #e4d9bd;
+    --ink: #2b2620;
+    --ink-soft: #5c5346;
+    --red: #a23a2c;
+    --red-dark: #7e2c21;
+    --steel: #3d5163;
+    --gold: #a9822c;
+    --card-a: #26463f;
+    --card-b: #3d5163;
+    --line: rgba(43,38,32,0.18);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 8%, rgba(169,130,44,0.07), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(162,58,44,0.06), transparent 45%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'PT Sans', sans-serif;
+    line-height:1.5;
+    padding: 48px 20px 80px;
+  }
+
+  .wrap{max-width: 920px; margin: 0 auto;}
+
+  /* ---------- HEADER ---------- */
+  header{margin-bottom: 56px;}
+  .kicker{
+    font-family:'PT Serif', serif;
+    font-style:italic;
+    color:var(--red-dark);
+    font-size: 15px;
+    margin: 0 0 6px;
+  }
+  h1{
+    font-family:'PT Serif', serif;
+    font-weight:700;
+    font-size: clamp(34px, 5.5vw, 52px);
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 18px;
+  }
+  header p{
+    max-width: 640px;
+    color: var(--ink-soft);
+    font-size: 16px;
+    margin: 0;
+  }
+  header p em{color:var(--red-dark); font-style: normal; border-bottom: 1px dotted var(--red);}
+
+  /* ---------- SECTION LABELS ---------- */
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap: 14px;
+    margin: 0 0 26px;
+  }
+  .section-num{
+    font-family:'PT Serif', serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--paper);
+    background: var(--red);
+    width: 30px; height:30px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .section-head h2{
+    font-family:'PT Serif', serif;
+    font-size: 26px;
+    margin:0;
+  }
+  .section-head span{
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  section{margin-bottom: 72px;}
+
+  /* ---------- DIALOGUE ---------- */
+  .dialogue-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom: 22px;
+  }
+  .hint{font-size: 13.5px; color: var(--ink-soft);}
+  .toggle-btn{
+    font-family:'PT Sans', sans-serif;
+    font-weight:700;
+    font-size: 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: transform .12s ease, background .15s ease;
+  }
+  .toggle-btn:hover{background: var(--red-dark);}
+  .toggle-btn:active{transform: translateY(1px);}
+  .toggle-btn.on{background: var(--red);}
+
+  .transcript{
+    background: var(--paper-dark);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 0;
+  }
+  .line{
+    display:grid;
+    grid-template-columns: 52px 1fr;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .line:last-child{border-bottom:none;}
+  .avatar{
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'PT Serif', serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--paper);
+    margin-top: 2px;
+  }
+  .line.speakerA .avatar{background: var(--card-a);}
+  .line.speakerB .avatar{background: var(--card-b);}
+  .en{font-size: 16.5px;}
+  .ru{
+    font-family:'PT Serif', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin-top: 6px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height .28s ease, opacity .2s ease, margin-top .28s ease;
+  }
+  .line.show-ru .ru, .transcript.show-all .ru{
+    max-height: 120px;
+    opacity: 1;
+  }
+  .transcript.show-all .line{cursor:default;}
+
+  /* ---------- FLASHCARDS ---------- */
+  .card-toolbar{margin-bottom:22px;}
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 760px){ .grid{grid-template-columns: repeat(2, 1fr);} }
+  @media (max-width: 440px){ .grid{grid-template-columns: 1fr;} }
+
+  .card{
+    perspective: 1200px;
+    height: 168px;
+  }
+  .card-inner{
+    position: relative;
+    width:100%; height:100%;
+    transform-style: preserve-3d;
+    transition: transform .5s cubic-bezier(.4,.2,.2,1);
+  }
+  .card.flipped .card-inner{transform: rotateY(180deg);}
+
+  .face{
+    position:absolute; inset:0;
+    border-radius: 6px;
+    backface-visibility: hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding: 16px;
+    box-shadow: 4px 4px 0 rgba(43,38,32,0.14);
+    cursor: pointer;
+    user-select: none;
+  }
+  .face-front{
+    background: var(--card-a);
+    color: var(--paper);
+  }
+  .card:nth-child(3n+2) .face-front{background: var(--card-b);}
+  .card:nth-child(3n+3) .face-front{background: var(--red-dark);}
+
+  .face-back{
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    transform: rotateY(180deg);
+    box-shadow: 4px 4px 0 rgba(43,38,32,0.10);
+  }
+
+  .tag{
+    font-size: 10.5px;
+    font-family:'PT Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    opacity: 0.72;
+  }
+  .word{
+    font-family:'PT Serif', serif;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.25;
+  }
+  .emoji{font-size: 22px; align-self:flex-end;}
+  .translation{
+    font-family:'PT Serif', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--red-dark);
+  }
+  .gloss{
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .flip-hint{
+    font-size: 10px;
+    color: var(--ink-soft);
+    text-align:right;
+  }
+
+  footer{
+    margin-top: 40px;
+    text-align:center;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="kicker">Interview notes &middot; internal memo</p>
+    <h1>Two Candidates for the Job</h1>
+    <p>A dialogue about hiring, and the fifteen words the speakers reach for when judging character. Tap a transcript line, or a card, to reveal the translation. <em>Нажимайте на строки и карточки, чтобы увидеть перевод.</em></p>
+  </header>
+
+  <section id="dialogue-section">
+    <div class="section-head">
+      <span class="section-num">1</span>
+      <h2>The Conversation</h2>
+      <span>tap any line</span>
+    </div>
+    <div class="dialogue-toolbar">
+      <p class="hint">Каждую реплику можно открыть отдельно — или показать перевод сразу для всех.</p>
+      <button class="toggle-btn" id="toggleAll">Show all translations</button>
+    </div>
+
+    <div class="transcript" id="transcript"></div>
+  </section>
+
+  <section id="vocab-section">
+    <div class="section-head">
+      <span class="section-num">2</span>
+      <h2>The Vocabulary</h2>
+      <span>tap a card</span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <footer>The Success Portfolio &middot; a working vocabulary for talking about people, honestly</footer>
+</div>
+
+<script>
+const dialogue = [
+  {sp:'A', en:'What did you make of the two candidates for the job?', ru:'Что ты думаешь о двух кандидатах на эту работу?'},
+  {sp:'B', en:'I thought Joe Pascoe was a real character – quick-witted, and shrewd.', ru:'Я подумал, что Джо Паско — настоящий персонаж: остроумный и проницательный.'},
+  {sp:'A', en:'Shrewd, yes, and I’d say pretty ruthless too. But I didn’t take to him personally.', ru:'Проницательный, да, и я бы сказал, довольно безжалостный. Но лично он мне не понравился.'},
+  {sp:'A', en:'I thought he came across as rather pushy and a bit conceited.', ru:'Мне показалось, что он производит впечатление довольно напористого и немного заносчивого человека.'},
+  {sp:'A', en:'Catherine actually struck me as being more suitable for this job.', ru:'Кэтрин, на самом деле, показалась мне более подходящей для этой работы.'},
+  {sp:'B', en:'She certainly seemed very conscientious and trustworthy, but I wonder', ru:'Она, безусловно, казалась очень добросовестной и надежной, но мне интересно,'},
+  {sp:'B', en:'whether she’s got the necessary charisma, or whether she’s assertive enough for this role.', ru:'есть ли у нее необходимая харизма, и достаточно ли она уверена в себе для этой роли.'},
+  {sp:'A', en:'Maybe not. But she’s not the kind of person who’d get up people’s noses, which Joe might.', ru:'Может быть, и нет. Но она не тот человек, который будет раздражать людей, а Джо мог бы.'},
+];
+
+const words = [
+  {en:'What did you make of', ru:'Что ты думаешь о / Как ты оцениваешь', gloss:'phrase — asking for a first impression', emoji:'🤔'},
+  {en:'a real character', ru:'настоящий персонаж, яркая личность', gloss:'noun phrase — often with a hint of eccentricity', emoji:'🎭'},
+  {en:'quick-witted', ru:'остроумный, находчивый, сообразительный', gloss:'adjective', emoji:'🧠'},
+  {en:'shrewd', ru:'проницательный, хитрый, практичный', gloss:'adjective', emoji:'🦊'},
+  {en:'ruthless', ru:'безжалостный, беспощадный', gloss:'adjective', emoji:'🗡️'},
+  {en:'take to', ru:'проникнуться симпатией, понравиться', gloss:'phrasal verb', emoji:'❤️'},
+  {en:'came across as', ru:'производить впечатление, казаться', gloss:'phrase', emoji:'👤'},
+  {en:'pushy', ru:'напористый, назойливый, пробивной', gloss:'adjective', emoji:'🚧'},
+  {en:'conceited', ru:'заносчивый, тщеславный, самодовольный', gloss:'adjective', emoji:'🦚'},
+  {en:'struck me as', ru:'поразил меня как / показался мне', gloss:'phrase', emoji:'💡'},
+  {en:'conscientious', ru:'добросовестный, сознательный', gloss:'adjective', emoji:'📋'},
+  {en:'trustworthy', ru:'надежный, заслуживающий доверия', gloss:'adjective', emoji:'🤝'},
+  {en:'charisma', ru:'харизма', gloss:'noun', emoji:'✨'},
+  {en:'assertive', ru:'уверенный в себе, настойчивый', gloss:'adjective', emoji:'💪'},
+  {en:'get up people’s noses', ru:'раздражать людей, действовать на нервы', gloss:'idiom', emoji:'😤'},
+];
+
+const transcript = document.getElementById('transcript');
+dialogue.forEach(d => {
+  const line = document.createElement('div');
+  line.className = 'line speaker' + d.sp;
+  line.innerHTML = `
+    <div class="avatar">${d.sp}</div>
+    <div>
+      <div class="en">${d.en}</div>
+      <div class="ru">${d.ru}</div>
+    </div>`;
+  line.addEventListener('click', () => line.classList.toggle('show-ru'));
+  transcript.appendChild(line);
+});
+
+const toggleAll = document.getElementById('toggleAll');
+toggleAll.addEventListener('click', () => {
+  const on = transcript.classList.toggle('show-all');
+  toggleAll.textContent = on ? 'Hide all translations' : 'Show all translations';
+  toggleAll.classList.toggle('on', on);
+});
+
+const grid = document.getElementById('grid');
+words.forEach(w => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-inner">
+      <div class="face face-front">
+        <span class="tag">tap to flip</span>
+        <span class="word">${w.en}</span>
+        <span class="emoji">${w.emoji}</span>
+      </div>
+      <div class="face face-back">
+        <span class="tag">${w.gloss}</span>
+        <span class="translation">${w.ru}</span>
+        <span class="flip-hint">tap to flip back</span>
+      </div>
+    </div>`;
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
